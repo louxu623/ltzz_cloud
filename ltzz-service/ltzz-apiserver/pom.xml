@@ -20,7 +20,7 @@
         <shiro.version>1.4.0</shiro.version>
         <qcloud.cos.version>4.4</qcloud.cos.version>
         <qiniu.version>[7.2.0, 7.2.99]</qiniu.version>
-        <hutool.version>4.1.1</hutool.version>
+        <hutool.version>4.1.12</hutool.version>
     </properties>
 
 
