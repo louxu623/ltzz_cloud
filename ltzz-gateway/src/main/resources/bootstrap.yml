@@ -1,0 +1,59 @@
+server:
+  port: 9999
+
+# 需要配置的服务名
+blade:
+  service:
+    ltzz-admin: ltzz-admin
+    ltzz-customer: ltzz-customer
+    ltzz-apiserver: ltzz-apiserver
+    ltzz-stock: ltzz-stock
+    ltzz-pay: ltzz-pay
+
+spring:
+  cloud:
+    gateway:
+      routes:
+      # 认证中心
+      - id: ${blade.service.ltzz-customer}
+        uri: lb://${blade.service.ltzz-customer}
+        predicates:
+        - Path=/${blade.service.ltzz-customer}/**
+        filters:
+        - name: RequestRateLimiter
+          args:
+            # 使用SpEL按名称引用bean
+            key-resolver: '#{@remoteAddrKeyResolver}'
+            # 允许用户每秒处理多少个请求
+            redis-rate-limiter.replenishRate: 10
+            # 允许在一秒钟内完成的最大请求数
+            redis-rate-limiter.burstCapacity: 20
+        - StripPrefix=1
+        #外部接口
+      - id: ${blade.service.ltzz-apiserver}
+        uri: lb://${blade.service.ltzz-apiserver}
+        predicates:
+          - Path=/${blade.service.ltzz-apiserver}/**
+      #后台管理中心
+      - id: ${blade.service.ltzz-admin}
+        uri: lb://${blade.service.ltzz-admin}
+        predicates:
+        - Path=/${blade.service.ltzz-admin}/**
+      #股票管理
+      - id: ${blade.service.ltzz-stock}
+        uri: lb://${blade.service.ltzz-stock}
+        predicates:
+        - Path=/${blade.service.ltzz-stock}/**
+      #支付管理
+      - id: ${blade.service.ltzz-pay}
+        uri: lb://${blade.service.ltzz-pay}
+        predicates:
+        - Path=/${blade.service.ltzz-pay}/**
+      discovery:
+        locator:
+          enabled: true
+    loadbalancer:
+      retry:
+        enabled: true
+
+
