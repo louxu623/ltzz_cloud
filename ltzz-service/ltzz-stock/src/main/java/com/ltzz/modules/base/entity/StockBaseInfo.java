@@ -23,6 +23,14 @@ public class StockBaseInfo {
      */
     private String name;
     /**
+     * 东方财富股吧排名
+     */
+    private Integer sort;
+    /**
+     * 东方财富股吧排名变化（较前一小时）
+     **/
+    private Integer changeSort;
+    /**
      * 最新价
      */
     private Double trade;

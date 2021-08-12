@@ -15,5 +15,6 @@ import java.util.Map;
 
 public interface StockBaseInfoService extends IService<StockBaseInfo> {
     void getBaseInfo(List<StockBaseInfo> stocks, int code, int page, int type, int typeStep);
+    void updateStockSort(String traceId, StockBaseInfo stock);
 }
 

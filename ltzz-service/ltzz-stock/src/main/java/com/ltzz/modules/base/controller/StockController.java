@@ -1,5 +1,6 @@
 package com.ltzz.modules.base.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ltzz.modules.app.entity.vo.LoginVo;
 import com.ltzz.modules.base.entity.*;
@@ -193,6 +194,29 @@ public class StockController {
         }
         GoodStocks result = importantIndexDataService.getGoodStocks(traceId, date);
         return R.data(result);
+    }
+
+    /**
+     * 获取东方财富股吧热度
+     */
+    @GetMapping("updateStockSort")
+    @ApiOperation("获取东方财富股吧热度")
+    public R<Boolean> updateStockSort() {
+        String traceId = UUID.randomUUID().toString();
+        log.info(traceId + ", updateStockSort start.");
+        List<StockBaseInfo> baseInfos = stockBaseInfoService.list(new QueryWrapper<StockBaseInfo>());
+        log.info(traceId + ", total count = " + baseInfos.size());
+        for (StockBaseInfo stock : baseInfos) {
+            log.info(traceId + ", current handler stock is : " + JSON.toJSONString(stock));
+            try {
+                stockBaseInfoService.updateStockSort(traceId, stock);
+                Thread.sleep(500L);
+            } catch (InterruptedException e) {
+                log.info(traceId, e);
+            }
+        }
+
+        return R.data(true);
     }
 
 //    一周新增讨论数TOP50
